@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RISE Research Module Finder</title>
+<style>
+  :root {
+    --scarlet: #cf202e;
+    --dark: #252525;
+    --muted: #626b75;
+    --line: #e2e5e9;
+    --surface: #ffffff;
+    --soft: #f5f6f8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--dark); background: var(--surface);
+  }
+  .wrap { max-width: 920px; margin: 0 auto; }
+  .heading { margin-bottom: 22px; }
+  .eyebrow {
+    color: var(--scarlet); font-size: 12px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px;
+  }
+  h1 { margin: 0 0 8px; font-size: clamp(25px, 4vw, 34px); }
+  .intro { margin: 0; color: var(--muted); line-height: 1.5; }
+  .search-panel {
+    margin: 22px 0 18px; padding: 16px; background: var(--soft);
+    border: 1px solid var(--line); border-radius: 12px;
+  }
+  label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+  .search-row { display: flex; gap: 10px; }
+  input {
+    flex: 1; min-width: 0; padding: 13px 14px; border: 1px solid #cbd0d6;
+    border-radius: 8px; font-size: 16px; background: white;
+  }
+  input:focus { outline: 3px solid rgba(207,32,46,.18); border-color: var(--scarlet); }
+  button {
+    padding: 0 16px; border: 0; border-radius: 8px; cursor: pointer;
+    background: var(--scarlet); color: white; font-weight: 700; font-size: 14px;
+  }
+  button:hover { filter: brightness(.94); }
+  .meta { display: flex; justify-content: space-between; gap: 12px; margin: 14px 2px; }
+  #count, #hint { color: var(--muted); font-size: 13px; }
+  .results { display: grid; gap: 12px; }
+  .module {
+    border: 1px solid var(--line); border-radius: 11px; padding: 17px 18px;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .module:hover { border-color: #c5cbd2; box-shadow: 0 3px 12px rgba(0,0,0,.05); }
+  .module h2 { font-size: 18px; line-height: 1.35; margin: 0 0 11px; }
+  .category {
+    display: inline-block; margin-bottom: 10px; padding: 4px 9px;
+    border-radius: 999px; background: #fcebed; color: #8d1721;
+    font-size: 11px; font-weight: 700;
+  }
+  .keywords { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 14px; }
+  .tag {
+    color: #46505b; background: #f1f3f5; border-radius: 5px;
+    padding: 4px 7px; font-size: 12px;
+  }
+  .open-link {
+    display: inline-block; color: #a51622; font-weight: 700;
+    font-size: 14px; text-decoration: none;
+  }
+  .open-link:hover { text-decoration: underline; }
+  .empty {
+    border: 1px dashed #cbd0d6; border-radius: 10px; padding: 25px;
+    text-align: center; color: var(--muted); line-height: 1.5;
+  }
+  .footer { margin-top: 20px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+  @media (max-width: 540px) {
+    body { padding: 16px; }
+    .search-row { flex-direction: column; }
+    button { min-height: 44px; }
+    .meta { flex-direction: column; gap: 4px; }
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="heading">
+    <div class="eyebrow">RISE Research Training</div>
+    <h1>Find a Research Module</h1>
+    <p class="intro">Search by topic, keyword, or research skill to find a training module. Try terms such as <strong>IRB</strong>, <strong>mixed methods</strong>, <strong>data cleaning</strong>, or <strong>ORCID</strong>.</p>
+  </header>
+
+  <section class="search-panel" aria-label="Module search">
+    <label for="search">What would you like to learn about?</label>
+    <div class="search-row">
+      <input id="search" type="search" placeholder="Enter a keyword or topic..." autocomplete="off">
+      <button id="clear" type="button">Clear search</button>
+    </div>
+  </section>
+
+  <div class="meta">
+    <span id="count" aria-live="polite"></span>
+    <span id="hint">Searches module titles and keywords</span>
+  </div>
+  <section id="results" class="results" aria-live="polite"></section>
+
+  <p class="footer">Select a module title link to open the training module in Canvas. You may need to sign in to UNLV Canvas to access course materials.</p>
+</main>
+
+<script>
+const modules = [
+  {
+    title: "Understanding the IRB Review Process at UNLV and UMC",
+    category: "Research Ethics",
+    keywords: ["IRB", "irb", "Internal Review Board", "UMC", "umc", "Ethics", "Ethical Guidelines"],
+    url: "https://unlv.instructure.com/courses/184605/modules/1034623"
+  },
+  {
+    title: "Architecture of Research Design",
+    category: "Research Methods",
+    keywords: ["Research Design", "Designs", "Design", "Types of Research Designs"],
+    url: "https://unlv.instructure.com/courses/184605/modules/1131483"
+  },
+  {
+    title: "Beyond the Numbers: Mastering Mixed Methods Research",
+    category: "Research Methods",
+    keywords: ["Mixed Methods", "Qualitative", "Quantitative"],
+    url: "https://unlv.instructure.com/courses/184605/modules/1134830"
+  },
+  {
+    title: "Removing Weeks from the Data: Practical Strategies for Cleaning and Preparing Research Data",
+    category: "Data Management",
+    keywords: ["Data", "Data Cleaning", "Preparing Data", "Data Quality"],
+    url: "https://unlv.instructure.com/courses/184605/modules/1163476"
+  },
+  {
+    title: "ORCID ID Essentials: Connecting Your Research Identity Across Platforms",
+    category: "Research Administration",
+    keywords: ["ORCID ID", "eRA Commons", "SciENcv", "ORCID"],
+    url: "https://unlv.instructure.com/courses/184605/modules/1217553"
+  },
+  {
+    title: "Rayyan",
+    category: "Literature Reviews",
+    keywords: ["Rayyan", "Scoping Review", "Scoping Reviews Tool", "Systematic Review", "Literature Review", "Literature synthesis", "Literature"],
+    url: "https://unlv.instructure.com/courses/184605/modules/1286106"
+  }
+];
+
+const searchInput = document.getElementById("search");
+const results = document.getElementById("results");
+const count = document.getElementById("count");
+
+function render() {
+  const query = searchInput.value.trim().toLocaleLowerCase();
+  const matches = modules.filter(module => {
+    const searchable = [module.title, module.category, ...module.keywords].join(" ").toLocaleLowerCase();
+    return searchable.includes(query);
+  });
+
+  count.textContent = `${matches.length} of ${modules.length} modules`;
+  results.replaceChildren();
+
+  if (!matches.length) {
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.innerHTML = "<strong>No matching modules found.</strong><br>Try a broader keyword, a related term, or a different spelling.";
+    results.appendChild(empty);
+    return;
+  }
+
+  matches.forEach(module => {
+    const card = document.createElement("article");
+    card.className = "module";
+
+    const title = document.createElement("h2");
+    title.textContent = module.title;
+
+    const category = document.createElement("span");
+    category.className = "category";
+    category.textContent = module.category;
+
+    const tags = document.createElement("div");
+    tags.className = "keywords";
+    module.keywords.forEach(keyword => {
+      const tag = document.createElement("span");
+      tag.className = "tag";
+      tag.textContent = keyword;
+      tags.appendChild(tag);
+    });
+
+    const link = document.createElement("a");
+    link.className = "open-link";
+    link.href = module.url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "Open module in Canvas ↗";
+
+    card.append(title, category, tags, link);
+    results.appendChild(card);
+  });
+}
+
+searchInput.addEventListener("input", render);
+document.getElementById("clear").addEventListener("click", () => {
+  searchInput.value = "";
+  render();
+  searchInput.focus();
+});
+render();
+</script>
+</body>
+</html>
